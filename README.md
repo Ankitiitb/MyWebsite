@@ -1,5 +1,4 @@
-# Ankit Choudhary - Model-Based Design Engineer
-## Simulation, Robotics & Control Systems Portfolio
+# Ankit Choudhary - Simulation Engineer
 
 ## 📋 Project Overview
 
