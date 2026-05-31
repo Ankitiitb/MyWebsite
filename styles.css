@@ -225,6 +225,20 @@ body {
     border-left-color: var(--accent-color);
 }
 
+/* Project Card Link Styling */
+.project-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.project-link-hint {
+    color: var(--secondary-color);
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
 .project-icon {
     font-size: 2.5rem;
     margin-bottom: 1rem;

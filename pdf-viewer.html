@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Viewer - Ankit Choudhary</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .pdf-viewer-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .pdf-viewer-header h1 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .pdf-viewer-nav {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .nav-button {
+            display: inline-block;
+            padding: 0.7rem 1.2rem;
+            background-color: var(--secondary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .nav-button:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .nav-button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .pdf-viewer-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            min-height: 700px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #pdf-canvas {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            margin: 1rem 0;
+        }
+        
+        .pdf-page-info {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-bottom: 1rem;
+        }
+        
+        .pdf-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        
+        .page-input {
+            width: 60px;
+            padding: 0.5rem;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .fallback-link {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.7rem 1.2rem;
+            background-color: var(--secondary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: var(--transition);
+        }
+        
+        .fallback-link:hover {
+            background-color: var(--accent-color);
+        }
+
+        @media (max-width: 768px) {
+            .pdf-viewer-nav {
+                flex-direction: column;
+            }
+            
+            .nav-button {
+                width: 100%;
+            }
+            
+            .pdf-controls {
+                flex-direction: column;
+            }
+            
+            .page-input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <h1>Ankit Choudhary</h1>
+                <p class="tagline"><a href="https://www.linkedin.com/in/ankit-choudhary-098094216/" target="_blank" rel="noopener noreferrer" class="linkedin-link">LinkedIn Profile</a></p>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html#home">Home</a></li>
+                <li><a href="index.html#robotics">Robotics</a></li>
+                <li><a href="index.html#academic">Academic Projects</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- PDF Viewer Content -->
+    <div class="container">
+        <div class="pdf-viewer-header">
+            <div class="container">
+                <h1 id="pdf-title">PDF Viewer</h1>
+            </div>
+        </div>
+
+        <div class="pdf-viewer-nav">
+            <button class="nav-button" onclick="goBack()">← Go Back</button>
+            <a href="" id="open-new-tab" class="nav-button" target="_blank">Open in New Tab</a>
+        </div>
+
+        <div class="pdf-viewer-container">
+            <div class="pdf-controls">
+                <button class="nav-button" onclick="previousPage()">← Previous</button>
+                <input type="number" id="page-num" class="page-input" value="1" min="1">
+                <span class="pdf-page-info">of <span id="page-count">?</span></span>
+                <button class="nav-button" onclick="nextPage()">Next →</button>
+            </div>
+            <canvas id="pdf-canvas"></canvas>
+            <p class="pdf-page-info" id="page-info"></p>
+            <a href="" id="fallback-link" class="fallback-link" target="_blank">Download PDF</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Ankit Choudhary. All projects are academic work.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        // Get query parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        let pdfFile = urlParams.get('file');
+        const pdfTitle = urlParams.get('title') || 'PDF Viewer';
+        
+        let pdf = null;
+        let currentPage = 1;
+        let totalPages = 0;
+        
+        // Initialize PDF.js worker
+        pdfjsLib.getDocument.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        
+        // Decode URL and convert to absolute path if needed
+        if (pdfFile) {
+            pdfFile = decodeURIComponent(pdfFile);
+            // Convert relative paths to file:// protocol if running locally
+            if (!pdfFile.startsWith('http') && !pdfFile.startsWith('file:')) {
+                const currentPath = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+                const absolutePath = new URL(pdfFile, window.location.origin + currentPath).href;
+                pdfFile = absolutePath;
+            }
+        }
+        
+        // Set title and links
+        document.getElementById('pdf-title').textContent = pdfTitle;
+        document.getElementById('open-new-tab').href = pdfFile;
+        document.getElementById('fallback-link').href = pdfFile;
+        
+        // Load PDF
+        async function loadPDF() {
+            try {
+                if (!pdfFile) {
+                    throw new Error('No PDF file specified');
+                }
+                
+                const loadingTask = pdfjsLib.getDocument({
+                    url: pdfFile,
+                    withCredentials: false
+                });
+                
+                pdf = await loadingTask.promise;
+                totalPages = pdf.numPages;
+                document.getElementById('page-count').textContent = totalPages;
+                renderPage(1);
+            } catch (error) {
+                console.error('Error loading PDF:', error);
+                console.error('Attempted to load from:', pdfFile);
+                document.querySelector('.pdf-viewer-container').innerHTML = 
+                    `<p style="color: #e74c3c; text-align: center; padding: 2rem;">
+                        <strong>Error loading PDF</strong><br>
+                        <small style="color: #7f8c8d; display: block; margin-top: 1rem;">
+                            File: ${pdfFile}<br>
+                            Error: ${error.message}
+                        </small><br>
+                        <a href="${pdfFile}" target="_blank" class="fallback-link">Click here to open in new tab</a>
+                    </p>`;
+            }
+        }
+        
+        // Render page
+        async function renderPage(pageNum) {
+            if (!pdf || pageNum < 1 || pageNum > totalPages) return;
+            
+            currentPage = pageNum;
+            document.getElementById('page-num').value = pageNum;
+            
+            try {
+                const page = await pdf.getPage(pageNum);
+                const canvas = document.getElementById('pdf-canvas');
+                const context = canvas.getContext('2d');
+                
+                const viewport = page.getViewport({ scale: 2 });
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+                
+                await page.render({
+                    canvasContext: context,
+                    viewport: viewport
+                }).promise;
+                
+                document.getElementById('page-info').textContent = `Page ${pageNum} of ${totalPages}`;
+            } catch (error) {
+                console.error('Error rendering page:', error);
+                document.getElementById('page-info').textContent = `Error rendering page ${pageNum}`;
+            }
+        }
+        
+        function nextPage() {
+            if (currentPage < totalPages) {
+                renderPage(currentPage + 1);
+            }
+        }
+        
+        function previousPage() {
+            if (currentPage > 1) {
+                renderPage(currentPage - 1);
+            }
+        }
+        
+        function goBack() {
+            window.history.back();
+        }
+        
+        // Page input change
+        document.getElementById('page-num').addEventListener('change', (e) => {
+            const pageNum = parseInt(e.target.value);
+            if (pageNum >= 1 && pageNum <= totalPages) {
+                renderPage(pageNum);
+            }
+        });
+        
+        // Load PDF on page load
+        window.addEventListener('load', loadPDF);
+    </script>
+</body>
+</html>

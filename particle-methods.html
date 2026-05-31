@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Particle Methods - Ankit Choudhary</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .project-page-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 3rem;
+        }
+        
+        .project-page-header h1 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .back-link {
+            display: inline-block;
+            color: var(--secondary-color);
+            text-decoration: none;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            margin-top: 1rem;
+        }
+        
+        .back-link:hover {
+            color: var(--accent-color);
+        }
+        
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .sidebar {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            height: fit-content;
+            position: sticky;
+            top: 110px;
+        }
+        
+        .sidebar h3 {
+            color: var(--primary-color);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+        
+        .pdf-list {
+            list-style: none;
+        }
+        
+        .pdf-list li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .pdf-link {
+            display: block;
+            padding: 0.7rem 1rem;
+            background-color: #f5f7fa;
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 5px;
+            border-left: 3px solid var(--secondary-color);
+            transition: var(--transition);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        
+        .pdf-link:hover,
+        .pdf-link.active {
+            background-color: var(--secondary-color);
+            color: white;
+            border-left-color: var(--accent-color);
+            transform: translateX(5px);
+        }
+        
+        .main-content {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            min-height: 700px;
+        }
+        
+        .pdf-title {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+        
+        .pdf-embed {
+            width: 100%;
+            height: 700px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .pdf-loading {
+            text-align: center;
+            padding: 3rem;
+            color: #7f8c8d;
+        }
+        
+        @media (max-width: 1024px) {
+            .content-wrapper {
+                grid-template-columns: 200px 1fr;
+                gap: 1.5rem;
+            }
+            
+            .sidebar {
+                top: 110px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: static;
+                order: 2;
+            }
+            
+            .main-content {
+                order: 1;
+                min-height: auto;
+            }
+            
+            .pdf-embed {
+                height: 500px;
+            }
+            
+            .sidebar h3 {
+                font-size: 0.9rem;
+            }
+            
+            .pdf-link {
+                font-size: 0.85rem;
+                padding: 0.5rem 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <h1>Ankit Choudhary</h1>
+                <p class="tagline"><a href="https://www.linkedin.com/in/ankit-choudhary-098094216/" target="_blank" rel="noopener noreferrer" class="linkedin-link">LinkedIn Profile</a></p>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html#home">Home</a></li>
+                <li><a href="index.html#robotics">Robotics</a></li>
+                <li><a href="index.html#academic">Academic Projects</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Project Page Content -->
+    <div class="container">
+        <a href="index.html#academic" class="back-link">← Back to Academic Projects</a>
+        
+        <div class="project-page-header">
+            <div class="container">
+                <h1>⚛️ Particle Methods</h1>
+                <p>Computational methods for particle dynamics and simulation</p>
+            </div>
+        </div>
+
+        <h2 class="section-title">Particle Methods</h2>
+ <div class="content-wrapper">
+    <aside class="sidebar">
+        <h3>📑 Projects</h3>
+        <ul class="pdf-list">
+            <li><a href="#" class="pdf-link" onclick="loadPDF('Projects_list/Particle Methods/Euler Method.pdf', 'Euler Method'); return false;">Euler Method</a></li>
+
+            <li><a href="#" class="pdf-link" onclick="loadPDF('Projects_list/Particle Methods/Guassian Kernal.pdf', 'Gaussian Kernel'); return false;">Gaussian Kernel</a></li>
+
+            <li><a href="#" class="pdf-link" onclick="loadPDF('Projects_list/Particle Methods/Panel Method.pdf', 'Panel Method'); return false;">Panel Method</a></li>
+
+            <li><a href="#" class="pdf-link" onclick="loadPDF('Projects_list/Particle Methods/Vortex Merging.pdf', 'Vortex Merging'); return false;">Vortex Merging</a></li>
+
+            <li><a href="#" class="pdf-link" onclick="loadPDF('Projects_list/Particle Methods/Vortex Method.pdf', 'Vortex Method'); return false;">Vortex Method</a></li>
+
+            <li><a href="#" class="pdf-link" onclick="loadPDF('Projects_list/Particle Methods/Vortex Shedding.pdf', 'Vortex Shedding'); return false;">Vortex Shedding</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <h3 class="pdf-title" id="pdf-title">Select a PDF to view</h3>
+        <div id="pdf-container" class="pdf-loading">
+            Click on a project from the sidebar to view
+        </div>
+    </main>
+</div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Ankit Choudhary. All projects are academic work.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+	    <script>
+        function loadPDF(url, title) {
+            const container = document.getElementById('pdf-container');
+            const titleElem = document.getElementById('pdf-title');
+            
+            // Update title
+            titleElem.textContent = title;
+            
+            // Update active link in sidebar
+            document.querySelectorAll('.pdf-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Load PDF in iframe
+            container.innerHTML = `<iframe src="${url}" class="pdf-embed"></iframe>`;
+        }
+        
+        // Load first PDF on page load
+        window.addEventListener('load', function() {
+            document.querySelector('.pdf-link').click();
+        });
+    </script>
+</body>
+</html>
