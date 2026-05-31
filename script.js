@@ -57,9 +57,8 @@ window.addEventListener('scroll', function() {
 const style = document.createElement('style');
 style.textContent = `
     .nav-links a.active {
-        color: #00ff88;
-        border-bottom: 2px solid #00ff88;
-        text-shadow: 0 0 8px rgba(0, 255, 136, 0.6);
+        color: #f1c40f;
+        border-bottom: 2px solid #f1c40f;
     }
 `;
 document.head.appendChild(style);
